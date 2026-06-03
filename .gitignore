@@ -3,3 +3,6 @@
 
 # Build output
 /dist/
+
+# CRX signing key (keep private; loss changes the extension ID)
+*.pem

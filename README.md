@@ -17,6 +17,7 @@ both Chrome and Firefox.
 - `content.js` — injects `page.js` into colonist's own JS context.
 - `page.js` — the actual fix (runs in the page world).
 - `content.css` — hides the ad strips to avoid a flash before the resize.
+- `build.sh` / `sign.sh` / `mkcrx.js` — packaging (see **Build & package**).
 
 ## Install
 
@@ -34,8 +35,43 @@ both Chrome and Firefox.
 3. Open colonist.io and start a game.
 
 > Temporary add-ons are removed when Firefox restarts. To keep it permanently,
-> package and sign it with [`web-ext`](https://extensionworkshop.com/documentation/develop/web-ext-command-reference/)
-> (`web-ext sign`) or self-distribute via addons.mozilla.org.
+> install a signed `.xpi` (see **Build & package** below) — release-channel
+> Firefox only installs add-ons signed by Mozilla via addons.mozilla.org (AMO).
+
+## Build & package
+
+Two scripts produce distributable artifacts in `dist/`. Both are dependency-light
+(`node`, `python3`, `zip`, and `openssl` for signing) and need no `npm install`.
+
+| Script | Output | Use |
+| --- | --- | --- |
+| `./build.sh` | `dist/fullhex-<version>.zip` | Upload to the Chrome Web Store / AMO for store distribution. |
+| `./sign.sh` | `dist/fullhex-<version>.crx` and `.xpi` | Signed Chrome package + a Firefox package for local/self-distribution. |
+
+```sh
+./sign.sh
+```
+
+This syntax-checks the sources, then writes:
+
+- **`dist/fullhex-<version>.crx`** — a self-signed CRXv3, built in Node by
+  `mkcrx.js` (no browser required). It is signed with `fullhex-key.pem`, a local
+  RSA key generated on first run and reused thereafter so the extension ID stays
+  stable. **Keep `fullhex-key.pem` private and do not lose it** — it is gitignored,
+  and regenerating it changes the extension ID.
+- **`dist/fullhex-<version>.xpi`** — the Firefox package (a zip with
+  `manifest.json` at the root). This is **not** AMO-signed: release-channel
+  Firefox will not install it permanently. Your options:
+  - Load it as a **temporary add-on** (`about:debugging` → Load Temporary Add-on).
+  - Set `xpinstall.signatures.required` to `false` in `about:config` on
+    **Developer Edition / Nightly / ESR**, then install the `.xpi` directly.
+  - Upload the `.xpi` (or the `build.sh` zip) to
+    [AMO](https://addons.mozilla.org) to have Mozilla sign it for release.
+
+> Why a hand-rolled `mkcrx.js` instead of `chrome --pack-extension`? Chrome's
+> packer crashes intermittently (`Trace/BPT trap`) when launched from a script,
+> so the CRX3 container is assembled and signed directly in Node for a
+> deterministic build.
 
 ## How it works
 

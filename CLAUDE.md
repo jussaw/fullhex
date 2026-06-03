@@ -15,6 +15,24 @@ no build step, no dependencies, no package.json, and no tests.
 - **Syntax check:** `node -c content.js && node -c page.js` and `python3 -m json.tool manifest.json`.
 - **Verification is manual:** there is no automated test path. Confirm changes by loading the extension, entering a colonist.io game, and observing the board fill the window (no blue gutters). The author cannot test from an active logged-in game programmatically.
 
+## Commits
+
+Use [Conventional Commits](https://www.conventionalcommits.org): `type(scope): subject`. A scope is **required**.
+
+- **Type** — one of `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+- **Scope** — the area touched, one of:
+  - `core` — the in-page fix (`content.js`, `page.js`, `content.css`).
+  - `manifest` — `manifest.json`.
+  - `firefox` — Firefox/AMO-specific behavior or metadata.
+  - `packaging` — `build.sh`, `sign.sh`, `mkcrx.js`, `dist/` output.
+  - `docs` — `README.md` and other user-facing docs.
+  - `repo` — repo-wide config/meta (`.gitignore`, `CLAUDE.md`, etc.).
+- **Subject** — imperative mood, lowercase, no trailing period, ≤72 chars ("add", not "added"/"adds").
+- **Body** (optional) — wrap at ~72 cols; explain *why* and list notable changes as `-` bullets.
+- **Breaking changes** — append `!` after the scope (`feat(core)!: …`) or add a `BREAKING CHANGE:` footer.
+
+Example: `build(packaging): add CRX and XPI packaging scripts`.
+
 ## Architecture
 
 The core problem and solution are non-obvious and worth understanding before changing anything:

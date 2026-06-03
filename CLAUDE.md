@@ -1,0 +1,40 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## What this is
+
+A Manifest V3 browser extension (Chrome + Firefox) that removes the blank ad-space
+gutters on colonist.io so the game board fills the window. It is plain JS/CSS with
+no build step, no dependencies, no package.json, and no tests.
+
+## Commands
+
+- **Load (Chrome):** `chrome://extensions` → Developer mode → Load unpacked → this folder. After editing files, click the extension's reload ↻ icon, then reload the colonist.io tab.
+- **Load (Firefox):** `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → pick `manifest.json`.
+- **Syntax check:** `node -c content.js && node -c page.js` and `python3 -m json.tool manifest.json`.
+- **Verification is manual:** there is no automated test path. Confirm changes by loading the extension, entering a colonist.io game, and observing the board fill the window (no blue gutters). The author cannot test from an active logged-in game programmatically.
+
+## Architecture
+
+The core problem and solution are non-obvious and worth understanding before changing anything:
+
+- **colonist.io sizes the game board in JavaScript, not from the ad DOM.** Hiding the ad `<div>`s does nothing to the board size (this was v1 and had no effect). The board reserves hardcoded gutters via `getInGameVerticalAdWidth()` → 165 (each side) and `getInGameHorizontalAdHeight()` → 90 (bottom), applied whenever `showVerticalAds()` / `showHorizontalAds()` return true. These live in colonist's minified bundle (`shared-web.*.js` for the ad controller, `ui-game.*.js` for the canvas/resize logic).
+- **The lever:** both `show*Ads()` short-circuit to `false` when `document.fullscreenElement` is truthy — colonist's own "fill the window" path. `page.js` redefines `document.fullscreenElement` (and the webkit alias) to read truthy without actually entering fullscreen, then dispatches a `resize` event, which colonist listens for (`addEventListener("resize", resizeScreen)`), forcing a full-size relayout.
+
+### Two-world injection (the reason there are two scripts)
+
+A content script runs in an **isolated world** and cannot redefine properties that colonist's page-context code reads. So:
+
+- `content.js` (isolated world, `run_at: document_start`) injects `page.js` via a `<script src>` tag using `chrome.runtime.getURL`. `page.js` is declared in `web_accessible_resources`.
+- `page.js` (page/MAIN world) does the actual `fullscreenElement` override and resize nudges.
+
+Any logic that must touch colonist's runtime belongs in `page.js`; `content.js` should stay a thin injector. `content.css` is only anti-flash (hides the ad strips briefly before the resize lands) and is not load-bearing.
+
+### Known trade-off
+
+Faking `fullscreenElement` makes colonist's in-game fullscreen toggle button believe it is already fullscreen, so it won't enter the Fullscreen API. This is documented and accepted (the board is already full-window; F11 still works).
+
+## Fragility note
+
+The fix depends on colonist continuing to gate ad gutters on `document.fullscreenElement`. Method names in the bundle are minified and change between colonist releases, so do not hardcode against them — the `fullscreenElement` semantic lever is the stable contract. If colonist changes that gating, the documented fallback is to directly override the canvas geometry (`#game-canvas`, its overlay canvas, and `#ui-game`: clear inline `left`, recompute `width`/`height`) on the same resize cadence.

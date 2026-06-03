@@ -1,0 +1,14 @@
+/*
+ * Hide colonist.io's in-game ad panels.
+ *
+ * This is belt-and-suspenders: page.js already makes colonist collapse the ad
+ * gutters and call its own hideInGameAds(), but this CSS prevents any brief
+ * flash of the empty ad strips / "Remove Ads" buttons before page.js's resize
+ * lands. Lobby/homepage ad rails are intentionally left untouched.
+ */
+#in_game_ad_left,
+#in_game_ad_right,
+#in_game_ad_bottom,
+#in_game_ad_bottom_small {
+  display: none !important;
+}

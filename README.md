@@ -18,6 +18,7 @@ both Chrome and Firefox.
 - `page.js` — the actual fix (runs in the page world).
 - `content.css` — hides the ad strips to avoid a flash before the resize.
 - `build.sh` / `sign.sh` / `mkcrx.js` — packaging (see **Build & package**).
+- `store/` — store-listing copy (summary + description) for AMO submission.
 
 ## Install
 
@@ -37,6 +38,10 @@ both Chrome and Firefox.
 > Temporary add-ons are removed when Firefox restarts. To keep it permanently,
 > install a signed `.xpi` (see **Build & package** below) — release-channel
 > Firefox only installs add-ons signed by Mozilla via addons.mozilla.org (AMO).
+
+> The manifest also declares Firefox-for-Android support (`gecko_android`,
+> min 142), so it runs on Android builds that allow add-ons (e.g. Nightly /
+> debug installs).
 
 ## Build & package
 

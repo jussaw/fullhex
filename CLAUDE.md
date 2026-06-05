@@ -5,14 +5,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 A Manifest V3 browser extension (Chrome + Firefox) that removes the blank ad-space
-gutters on colonist.io so the game board fills the window. It is plain JS/CSS with
-no build step, no dependencies, no package.json, and no tests.
+gutters on colonist.io so the game board fills the window. The extension itself is
+plain JS/CSS with no build step, no dependencies, no package.json, and no tests;
+optional shell scripts (`build.sh` / `sign.sh`) package it for distribution.
 
 ## Commands
 
 - **Load (Chrome):** `chrome://extensions` → Developer mode → Load unpacked → this folder. After editing files, click the extension's reload ↻ icon, then reload the colonist.io tab.
 - **Load (Firefox):** `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → pick `manifest.json`.
 - **Syntax check:** `node -c content.js && node -c page.js` and `python3 -m json.tool manifest.json`.
+- **Package:** `./build.sh` writes `dist/fullhex-<version>.zip` (Chrome Web Store / AMO upload); `./sign.sh` writes a self-signed `.crx` plus an `.xpi` (see README **Build & package**).
 - **Verification is manual:** there is no automated test path. Confirm changes by loading the extension, entering a colonist.io game, and observing the board fill the window (no blue gutters). The author cannot test from an active logged-in game programmatically.
 
 ## Commits
@@ -23,7 +25,7 @@ Use [Conventional Commits](https://www.conventionalcommits.org): `type(scope): s
 - **Scope** — the area touched, one of:
   - `core` — the in-page fix (`content.js`, `page.js`, `content.css`).
   - `manifest` — `manifest.json`.
-  - `firefox` — Firefox/AMO-specific behavior or metadata.
+  - `firefox` — Firefox/AMO-specific behavior or metadata, incl. store-listing copy in `store/` (`amo-*.txt`).
   - `packaging` — `build.sh`, `sign.sh`, `mkcrx.js`, `dist/` output.
   - `docs` — `README.md` and other user-facing docs.
   - `repo` — repo-wide config/meta (`.gitignore`, `CLAUDE.md`, etc.).

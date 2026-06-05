@@ -1,0 +1,23 @@
+Play colonist.io edge to edge.
+
+Free colonist.io accounts reserve a 165px strip down each side of the board and a 90px strip along the bottom for ads. If you run an ad blocker, the ads are gone — but that reserved space just stays blank blue, shrinking your game board for no reason.
+
+FullHex tells colonist to collapse those gutters and re-lay-out the board at full size, so the hex map fills your window instead of floating in a frame of empty space.
+
+What it does
+- Removes the blank left, right, and bottom ad gutters in-game
+- Resizes the board to use the full browser window
+- Kicks in automatically the moment you open a colonist.io game
+
+Lightweight and private by design
+- No ads, no analytics, no tracking — nothing is collected or sent anywhere
+- No account, login, or configuration
+- No background process and no toolbar UI
+- Runs only on colonist.io and touches nothing else you browse
+
+Good to know
+- On the very first frame you may see the gutters flash for a fraction of a second before the board expands — that's expected.
+- The in-game fullscreen toggle (the little expand icon) will think it's already fullscreen, so it won't trigger browser fullscreen. The board is already filling the window, so this is purely cosmetic — and F11 still works for true browser fullscreen.
+- If a colonist.io game doesn't resize, reload the tab after installing.
+
+Not affiliated with, endorsed by, or sponsored by colonist.io.

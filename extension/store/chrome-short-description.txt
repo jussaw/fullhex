@@ -1,0 +1,1 @@
+Play colonist.io edge to edge. FullHex collapses the blank ad-space gutters so the game board fills your whole window.

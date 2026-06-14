@@ -5,7 +5,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 # Runtime files that go in the package (manifest must stay at the zip root).
-FILES=(manifest.json content.js content.css page.js)
+FILES=(manifest.json content.js content.css page.js icon-16.png icon-32.png icon-48.png icon-128.png)
 
 # Syntax-check before packaging so we never ship a broken build.
 node -c content.js

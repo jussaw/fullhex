@@ -1,8 +1,11 @@
 # macOS
 .DS_Store
 
-# Build output
-/dist/
+# Build output (extension/dist/)
+dist/
 
 # CRX signing key (keep private; loss changes the extension ID)
 *.pem
+
+# Local agent tooling
+.superpowers/

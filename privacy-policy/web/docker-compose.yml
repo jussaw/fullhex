@@ -1,0 +1,10 @@
+name: fullhex-privacy
+services:
+  web:
+    container_name: fullhex-privacy-web
+    build: .
+    ports:
+      - "23414:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always

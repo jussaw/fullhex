@@ -1,5 +1,5 @@
-const LAST_UPDATED = 'June 13, 2026';
-const CONTACT_EMAIL = 'justin@jussaw.com';
+const LAST_UPDATED = 'June 14, 2026';
+const CONTACT_EMAIL = 'fullhex@jussaw.com';
 
 export default function PrivacyPolicy() {
   return (
